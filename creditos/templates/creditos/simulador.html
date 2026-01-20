@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Crédito</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        form { background: #f4f4f4; padding: 20px; border-radius: 5px; max-width: 400px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+
+    <h1>Simulador de Crédito</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        <label>Monto a Prestar ($):</label>
+        <input type="number" name="monto" required min="10000">
+
+        <label>Tasa Mensual (%):</label>
+        <input type="number" name="tasa" step="0.01" required>
+
+        <label>Plazo (Meses):</label>
+        <input type="number" name="plazo" required min="1">
+
+        <button type="submit">Calcular Cuota</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if tabla %}
+        <h2>Tabla de Amortización</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mes</th>
+                    <th>Cuota</th>
+                    <th>Interés</th>
+                    <th>Abono Capital</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in tabla %}
+                <tr>
+                    <td>{{ fila.mes }}</td>
+                    <td>${{ fila.cuota }}</td>
+                    <td>${{ fila.interes }}</td>
+                    <td>${{ fila.capital }}</td>
+                    <td>${{ fila.saldo }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</body>
+</html>
