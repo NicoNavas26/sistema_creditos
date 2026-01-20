@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 
 class Cliente(models.Model):
     documento = models.CharField(max_length=20, unique=True)
@@ -30,6 +31,14 @@ class Prestamo(models.Model):
 
     def __str__(self):
         return f"Préstamo {self.id} - {self.cliente.nombres} - ${self.monto}"
+    def total_pagado(self):
+        # Busca todos los pagos y suma la columna 'monto'
+        resultado = self.pagos.aggregate(Sum('monto'))
+        return resultado['monto__sum'] or 0
+
+    def saldo_pendiente(self):
+        # Resta simple: Lo que presté MENOS lo que me han devuelto
+        return self.monto - self.total_pagado()
     
 class Pago(models.Model):
     prestamo = models.ForeignKey(Prestamo, on_delete=models.CASCADE, related_name='pagos')

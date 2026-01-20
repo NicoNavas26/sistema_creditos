@@ -8,8 +8,26 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         th { background-color: #007bff; color: white; }
-        .ficha { background: #f9f9f9; padding: 15px; border-left: 5px solid #007bff; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-pay { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        
+        /* Ficha mejorada para mostrar el saldo */
+        .ficha { 
+            background: #f9f9f9; 
+            padding: 20px; 
+            border-left: 5px solid #007bff; 
+            border-radius: 4px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        .saldo-box {
+            text-align: right;
+            padding-right: 20px;
+            border-right: 1px solid #ccc;
+            margin-right: 20px;
+        }
+
+        .btn-pay { background-color: #28a745; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.1em;}
         .btn-back { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
         h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px; }
     </style>
@@ -21,11 +39,19 @@
     <div class="ficha">
         <div>
             <p><strong>Cliente:</strong> {{ prestamo.cliente }}</p>
-            <p><strong>Monto Prestado:</strong> ${{ prestamo.monto }}</p>
-            <p><strong>Tasa:</strong> {{ prestamo.tasa_interes }}% | <strong>Plazo:</strong> {{ prestamo.plazo_meses }} meses</p>
+            <p><strong>Monto Original:</strong> ${{ prestamo.monto }}</p>
+            <p><strong>Tasa:</strong> {{ prestamo.tasa_interes }}% | <strong>Plazo:</strong> {{ prestamo.plazo_meses }} m.</p>
         </div>
+
+        <div class="saldo-box">
+            <p>Abonado: <span style="color: green;">${{ prestamo.total_pagado }}</span></p>
+            <p style="font-size: 1.5em; margin: 5px 0;">
+                Saldo: <strong style="color: red;">${{ prestamo.saldo_pendiente }}</strong>
+            </p>
+        </div>
+
         <div>
-            <a href="{% url 'registrar_pago' prestamo.id %}" class="btn-pay">$$ REGISTRAR PAGO $$</a>
+            <a href="{% url 'registrar_pago' prestamo.id %}" class="btn-pay">$$ PAGAR</a>
         </div>
     </div>
 
