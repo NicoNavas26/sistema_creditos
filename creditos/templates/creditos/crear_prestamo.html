@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Préstamo Real</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; font-size: 16px; margin-top: 10px;}
+        .error { color: red; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <h1>Registrar Nuevo Préstamo</h1>
+    <p>Este formulario guardará los datos en la Base de Datos vinculándolos a un cliente.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {% for field in form %}
+        <div class="form-group">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+                <div class="error">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit">Guardar Préstamo</button>
+    </form>
+
+</body>
+</html>

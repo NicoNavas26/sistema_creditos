@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from .utils import calcular_tabla_amortizacion
+from .models import Prestamo
+from .forms import PrestamoForm
 
 def simular_credito(request):
     tabla = []
@@ -24,4 +26,44 @@ def simular_credito(request):
     return render(request, 'creditos/simulador.html', {
         'tabla': tabla,
         'error': error
+    })
+
+def crear_prestamo(request):
+    if request.method == 'POST':
+        # Procesar datos enviados
+        form = PrestamoForm(request.POST)
+        if form.is_valid():
+            nuevo_prestamo = form.save()
+            # Redirigir al detalle (crearemos esta ruta en pasos siguientes)
+            return redirect('detalle_prestamo', prestamo_id=nuevo_prestamo.id)
+    else:
+        # Mostrar formulario vacío
+        form = PrestamoForm()
+
+    return render(request, 'creditos/crear_prestamo.html', {'form': form})
+
+def detalle_prestamo(request, prestamo_id):
+    # 1. Buscar el préstamo por su ID. Si no existe, muestra error 404.
+    prestamo = get_object_or_404(Prestamo, id=prestamo_id)
+
+    # 2. Recalcular la tabla de pagos para visualizarla
+    tabla = calcular_tabla_amortizacion(
+        prestamo.monto, 
+        prestamo.tasa_interes, 
+        prestamo.plazo_meses
+    )
+
+    # 3. Enviar datos a la plantilla
+    return render(request, 'creditos/detalle_prestamo.html', {
+        'prestamo': prestamo,
+        'tabla': tabla
+    })
+
+def listar_prestamos(request):
+    # Traemos TODOS los préstamos de la base de datos
+    # order_by('-creado_at') hace que salgan los más nuevos primero
+    prestamos = Prestamo.objects.all().order_by('-creado_at')
+    
+    return render(request, 'creditos/lista_prestamos.html', {
+        'prestamos': prestamos
     })

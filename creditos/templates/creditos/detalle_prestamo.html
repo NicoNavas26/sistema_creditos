@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Préstamo #{{ prestamo.id }}</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #007bff; color: white; }
+        .ficha { background: #f9f9f9; padding: 15px; border-left: 5px solid #007bff; border-radius: 4px; }
+        .btn-back { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+
+    <h1>Préstamo #{{ prestamo.id }} - <span style="color: green;">{{ prestamo.estado }}</span></h1>
+    
+    <div class="ficha">
+        <p><strong>Cliente:</strong> {{ prestamo.cliente }}</p>
+        <p><strong>Monto:</strong> ${{ prestamo.monto }}</p>
+        <p><strong>Tasa Mensual:</strong> {{ prestamo.tasa_interes }}%</p>
+        <p><strong>Plazo:</strong> {{ prestamo.plazo_meses }} meses</p>
+        <p><strong>Fecha Inicio:</strong> {{ prestamo.fecha_inicio }}</p>
+    </div>
+
+    <h2>Plan de Pagos Oficial</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Mes</th>
+                <th>Cuota</th>
+                <th>Interés</th>
+                <th>Abono Capital</th>
+                <th>Saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in tabla %}
+            <tr>
+                <td>{{ fila.mes }}</td>
+                <td>${{ fila.cuota }}</td>
+                <td>${{ fila.interes }}</td>
+                <td>${{ fila.capital }}</td>
+                <td>${{ fila.saldo }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="/crear-prestamo/" class="btn-back">← Registrar otro préstamo</a>
+
+</body>
+</html>

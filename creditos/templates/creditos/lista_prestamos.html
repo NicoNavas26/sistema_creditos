@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Préstamos</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        h1 { display: inline-block; margin-right: 20px; }
+        .btn-new { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:hover { background-color: #f9f9f9; }
+        .link-detail { color: #007bff; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div>
+        <h1>Mis Préstamos</h1>
+        <a href="/crear-prestamo/" class="btn-new">+ Nuevo Préstamo</a>
+    </div>
+
+    {% if prestamos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prestamos %}
+                <tr>
+                    <td>#{{ p.id }}</td>
+                    <td>{{ p.cliente }}</td>
+                    <td>${{ p.monto }}</td>
+                    <td>{{ p.estado }}</td>
+                    <td>{{ p.creado_at|date:"d/m/Y" }}</td>
+                    <td>
+                        <a href="{% url 'detalle_prestamo' p.id %}" class="link-detail">Ver Detalle</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay préstamos registrados aún.</p>
+    {% endif %}
+
+</body>
+</html>
