@@ -30,3 +30,13 @@ class Prestamo(models.Model):
 
     def __str__(self):
         return f"Préstamo {self.id} - {self.cliente.nombres} - ${self.monto}"
+    
+class Pago(models.Model):
+    prestamo = models.ForeignKey(Prestamo, on_delete=models.CASCADE, related_name='pagos')
+    monto = models.DecimalField(max_digits=12, decimal_places=2)
+    fecha = models.DateField()
+    nota = models.CharField(max_length=200, blank=True, null=True, help_text="Ej: Transferencia Bancolombia")
+    creado_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Abono ${self.monto} - {self.prestamo}"

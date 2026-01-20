@@ -12,4 +12,7 @@ urlpatterns = [
     
     # NUEVA: Ruta dinámica (el número cambia según el préstamo)
     path('prestamo/<int:prestamo_id>/', views.detalle_prestamo, name='detalle_prestamo'),
+
+    # NUEVA RUTA:
+    path('prestamo/<int:prestamo_id>/pagar/', views.registrar_pago, name='registrar_pago'),
 ]

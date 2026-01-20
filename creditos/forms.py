@@ -1,5 +1,5 @@
 from django import forms
-from .models import Prestamo
+from .models import Prestamo, Pago
 
 class PrestamoForm(forms.ModelForm):
     class Meta:
@@ -15,4 +15,14 @@ class PrestamoForm(forms.ModelForm):
         labels = {
             'tasa_interes': 'Tasa Mensual (%)',
             'plazo_meses': 'Plazo (Meses)'
+        }
+    
+class PagoForm(forms.ModelForm):
+    class Meta:
+        model = Pago
+        fields = ['monto', 'fecha', 'nota']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'monto': forms.NumberInput(attrs={'class': 'form-control'}),
+            'nota': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Opcional'}),
         }

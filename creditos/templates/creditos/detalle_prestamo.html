@@ -5,11 +5,13 @@
     <title>Detalle de Préstamo #{{ prestamo.id }}</title>
     <style>
         body { font-family: sans-serif; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         th { background-color: #007bff; color: white; }
-        .ficha { background: #f9f9f9; padding: 15px; border-left: 5px solid #007bff; border-radius: 4px; }
+        .ficha { background: #f9f9f9; padding: 15px; border-left: 5px solid #007bff; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-pay { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
         .btn-back { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -17,14 +19,41 @@
     <h1>Préstamo #{{ prestamo.id }} - <span style="color: green;">{{ prestamo.estado }}</span></h1>
     
     <div class="ficha">
-        <p><strong>Cliente:</strong> {{ prestamo.cliente }}</p>
-        <p><strong>Monto:</strong> ${{ prestamo.monto }}</p>
-        <p><strong>Tasa Mensual:</strong> {{ prestamo.tasa_interes }}%</p>
-        <p><strong>Plazo:</strong> {{ prestamo.plazo_meses }} meses</p>
-        <p><strong>Fecha Inicio:</strong> {{ prestamo.fecha_inicio }}</p>
+        <div>
+            <p><strong>Cliente:</strong> {{ prestamo.cliente }}</p>
+            <p><strong>Monto Prestado:</strong> ${{ prestamo.monto }}</p>
+            <p><strong>Tasa:</strong> {{ prestamo.tasa_interes }}% | <strong>Plazo:</strong> {{ prestamo.plazo_meses }} meses</p>
+        </div>
+        <div>
+            <a href="{% url 'registrar_pago' prestamo.id %}" class="btn-pay">$$ REGISTRAR PAGO $$</a>
+        </div>
     </div>
 
-    <h2>Plan de Pagos Oficial</h2>
+    <h2>Historial de Pagos Recibidos</h2>
+    {% if prestamo.pagos.all %}
+        <table>
+            <thead style="background-color: #28a745;">
+                <tr>
+                    <th style="background-color: #218838;">Fecha</th>
+                    <th style="background-color: #218838;">Monto</th>
+                    <th style="background-color: #218838;">Nota</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pago in prestamo.pagos.all %}
+                <tr>
+                    <td>{{ pago.fecha }}</td>
+                    <td><strong>${{ pago.monto }}</strong></td>
+                    <td>{{ pago.nota }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p><em>No se han registrado pagos aún.</em></p>
+    {% endif %}
+
+    <h2>Plan de Pagos (Proyección)</h2>
     <table>
         <thead>
             <tr>
@@ -32,7 +61,7 @@
                 <th>Cuota</th>
                 <th>Interés</th>
                 <th>Abono Capital</th>
-                <th>Saldo</th>
+                <th>Saldo Teórico</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +77,7 @@
         </tbody>
     </table>
     
-    <a href="/crear-prestamo/" class="btn-back">← Registrar otro préstamo</a>
+    <a href="/" class="btn-back">← Volver al Tablero Principal</a>
 
 </body>
 </html>

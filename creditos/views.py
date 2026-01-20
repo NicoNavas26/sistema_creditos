@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .utils import calcular_tabla_amortizacion
 from .models import Prestamo
-from .forms import PrestamoForm
+from .forms import PrestamoForm, PagoForm
 
 def simular_credito(request):
     tabla = []
@@ -66,4 +66,28 @@ def listar_prestamos(request):
     
     return render(request, 'creditos/lista_prestamos.html', {
         'prestamos': prestamos
+    })
+
+def registrar_pago(request, prestamo_id):
+    # Buscamos el préstamo al que le van a abonar
+    prestamo = get_object_or_404(Prestamo, id=prestamo_id)
+
+    if request.method == 'POST':
+        form = PagoForm(request.POST)
+        if form.is_valid():
+            # 1. Preparamos el pago pero no lo guardamos todavía
+            pago = form.save(commit=False)
+            # 2. Le asignamos manualmente el préstamo (vinculación)
+            pago.prestamo = prestamo
+            # 3. Ahora sí guardamos en la Base de Datos
+            pago.save()
+            
+            # Volvemos al detalle para ver el pago reflejado
+            return redirect('detalle_prestamo', prestamo_id=prestamo.id)
+    else:
+        form = PagoForm()
+
+    return render(request, 'creditos/registrar_pago.html', {
+        'form': form,
+        'prestamo': prestamo
     })
